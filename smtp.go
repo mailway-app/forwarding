@@ -151,7 +151,7 @@ func rcptHandler(session *session, from string, to string) bool {
 		return false
 	}
 	session.id = id
-	if err := mailDBNew(config.Name, id); err != nil {
+	if err := mailDBNew(session, config.Name, id); err != nil {
 		log.Errorf("mailDBNew: %s", err)
 		return false
 	}
