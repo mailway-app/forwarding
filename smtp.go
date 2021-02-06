@@ -30,6 +30,10 @@ const (
 	MAIL_STATUS_SPAM = 3
 )
 
+func hasLoop(email *Email) bool {
+	return len(email.Data.Header["Received"]) > 10
+}
+
 func runSpamassassin(file string) error {
 	var cancel context.CancelFunc
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -192,26 +196,8 @@ type EmailEnvelope struct {
 type Email struct {
 	Envelope EmailEnvelope
 	Data     *mail.Message
-}
-
-func (e Email) String() string {
-	headers := make([]string, 0)
-	for k, vs := range e.Data.Header {
-		for _, v := range vs {
-			headers = append(headers, fmt.Sprintf("%s: %s", k, v))
-		}
-	}
-
-	out := strings.Join(headers, "\r\n")
-	out += "\r\n\r\n"
-
-	buf := new(bytes.Buffer)
-	if _, err := buf.ReadFrom(e.Data.Body); err != nil {
-		log.Errorf("buffer ReadFrom error: %s", err)
-	}
-	out += buf.String()
-
-	return out
+	// preserve the original email to avoid breaking any signatures
+	Bytes []byte
 }
 
 func mailHandler(s *session, from string, to []string, data []byte) error {
@@ -237,14 +223,6 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 			log.Errorf("could not read buffer after spam processing: %s", err)
 			return processingError
 		}
-	}
-
-	// prevents loop for now, since ReadMessage doesn't support multiple times
-	// the same header key we will just count the substring.
-	// TODO: implement a way to resolve loops by flattening the chain
-	if strings.Count(string(data), "X-Mailway-Id:") > 1 {
-		log.Warn("loop detected")
-		return loopError
 	}
 
 	msg, err := mail.ReadMessage(bytes.NewReader(data))
@@ -289,6 +267,12 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 	email := Email{
 		Envelope: EmailEnvelope{from, to},
 		Data:     msg,
+		Bytes:    data,
+	}
+
+	if hasLoop(&email) {
+		log.Warn("loop detected")
+		return loopError
 	}
 
 	chans := MakeActionChans()
@@ -344,12 +328,11 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 }
 
 func main() {
-	log.SetLevel(log.DebugLevel)
-
 	c, err := config.Read()
 	if err != nil {
 		panic(err)
 	}
+	log.SetLevel(c.GetLogLevel())
 
 	if c.ServerJWT == "" {
 		panic("server JWT is needed")
@@ -375,8 +358,7 @@ func main() {
 
 func sendMail(email Email, to string) error {
 	from := email.Envelope.From
-	data := email.String()
-	if err := smtp.SendMail(LOCAL_SMTP, nil, from, []string{to}, []byte(data)); err != nil {
+	if err := smtp.SendMail(LOCAL_SMTP, nil, from, []string{to}, email.Bytes); err != nil {
 		return errors.Wrap(err, "could not send email")
 	}
 	return nil

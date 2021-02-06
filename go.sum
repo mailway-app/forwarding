@@ -17,6 +17,8 @@ github.com/mailway-app/config v0.0.0-20210124184150-485238e4123e h1:Vda0VmMXsktM
 github.com/mailway-app/config v0.0.0-20210124184150-485238e4123e/go.mod h1:7Uxyjt0aFj34+PEBfhaPGomhPav4UKbtCD6J9z17sz4=
 github.com/mailway-app/config v0.0.0-20210126225351-cc4d9569a9b1 h1:GiWB/TYifhCpmt+erc+lSKOnZ+9oUAsLG9UDmKlo5z0=
 github.com/mailway-app/config v0.0.0-20210126225351-cc4d9569a9b1/go.mod h1:7Uxyjt0aFj34+PEBfhaPGomhPav4UKbtCD6J9z17sz4=
+github.com/mailway-app/config v0.0.0-20210131161027-17737b0f1d0c h1:Cg2CwynkGHBPPtyGcLIL5J3zM+rEejx4Wex17oid1Uk=
+github.com/mailway-app/config v0.0.0-20210131161027-17737b0f1d0c/go.mod h1:gjmRcvcb1UaRgtEMyfASF1XDXB2t0AFNKK+fJ8xM3NQ=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
@@ -29,6 +31,8 @@ github.com/tidwall/match v1.0.3 h1:FQUVvBImDutD8wJLN6c5eMzWtjgONK9MwIBCOrUJKeE=
 github.com/tidwall/match v1.0.3/go.mod h1:eRSPERbgtNPcGhD8UCthc6PmLEQXEWd3PRB5JTxsfmM=
 golang.org/x/sys v0.0.0-20191026070338-33540a1f6037 h1:YyJpGZS1sBuBCzLAR1VEpK193GlqGZbnPFnPV/5Rsb4=
 golang.org/x/sys v0.0.0-20191026070338-33540a1f6037/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c h1:VwygUrnw9jn88c4u8GD3rZQbqrP/tgas88tPUbBxQrk=
+golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.4.0 h1:D8xgwECY7CYvx+Y2n4sBz93Jn9JRvxdiyyo8CTfuKaY=
 gopkg.in/yaml.v2 v2.4.0/go.mod h1:RDklbk79AGWmwhnvt/jBztapEOGDOx6ZbXqjP6csGnQ=

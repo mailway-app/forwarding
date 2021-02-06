@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/mailway-app/config"
 
@@ -31,7 +32,7 @@ type APIResponse struct {
 }
 
 func getDomainConfig(instance *config.Config, domain string) (*Domain, error) {
-	url := fmt.Sprintf("%s/instance/%s/domain/%s", API_BASE_URL, instance.ServerId, domain)
+	url := fmt.Sprintf("%s/instance/%s/domain/%s", API_BASE_URL, instance.ServerId, strings.ToLower(domain))
 	log.Debugf("request to %s", url)
 
 	req, err := retryablehttp.NewRequest(http.MethodGet, url, nil)
