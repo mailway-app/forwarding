@@ -90,6 +90,10 @@ func getField(field MatchField, email Email) (string, error) {
 	switch field {
 	case FIELD_TO:
 		to := email.Data.Header.Get("To")
+		if to == "" {
+			// FIXME: support multiple to?
+			to = email.Envelope.To[0]
+		}
 		e, err := mail.ParseAddress(to)
 		if err != nil {
 			return "", errors.Wrapf(err, "failed to parse %s", to)
@@ -98,6 +102,9 @@ func getField(field MatchField, email Email) (string, error) {
 		return e.Address, nil
 	case FIELD_FROM:
 		from := email.Data.Header.Get("From")
+		if from == "" {
+			from = email.Envelope.From
+		}
 		e, err := mail.ParseAddress(from)
 		if err != nil {
 			return "", errors.Wrapf(err, "failed to parse %s", from)

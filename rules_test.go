@@ -29,6 +29,17 @@ func makeEmail(body string) Email {
 	}
 }
 
+func makeEmailWithEnvelope(body, to, from string) Email {
+	msg, err := mail.ReadMessage(bytes.NewReader([]byte(body)))
+	if err != nil {
+		panic(err)
+	}
+	return Email{
+		Envelope: EmailEnvelope{from, []string{to}},
+		Data:     msg,
+	}
+}
+
 func TestDropByDefault(t *testing.T) {
 	rules := []Rule{}
 	chans := MakeActionChans()
@@ -164,8 +175,6 @@ Hello world!
 	assert.Equal(t, <-chans.drop, ActionDrop{DroppedRule: true}, "Mail was not dropped")
 }
 
-// FIXME: test to with no header but in envenlope
-
 func TestMatchFieldTo(t *testing.T) {
 	email := makeEmail(`From: sven@b.ee
 To: a@gmail.com
@@ -174,6 +183,29 @@ Date: Sun, 8 Jan 2017 20:37:44 +0200
 
 Hello world!
 	`)
+
+	matches := []Match{
+		{Type: MATCH_LITERAL, Field: FIELD_TO, Value: "a@gmail.com"},
+	}
+	v, err := HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, true)
+
+	matches = []Match{
+		{Type: MATCH_LITERAL, Field: FIELD_TO, Value: "u@gmail.com"},
+	}
+	v, err = HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, false)
+}
+
+func TestMatchFieldToNoHeader(t *testing.T) {
+	email := makeEmailWithEnvelope(`From: sven@b.ee
+Subject: test
+Date: Sun, 8 Jan 2017 20:37:44 +0200
+
+Hello world!
+	`, "a@gmail.com", "sven@b.ee")
 
 	matches := []Match{
 		{Type: MATCH_LITERAL, Field: FIELD_TO, Value: "a@gmail.com"},
@@ -207,8 +239,6 @@ Hello world!
 	assert.Equal(t, v, true)
 }
 
-// FIXME: test from with no header but in envenlope
-
 func TestMatchFieldFrom(t *testing.T) {
 	email := makeEmail(`From: a@gmail.com
 To: sven@b.ee
@@ -227,6 +257,28 @@ Hello world!
 
 	matches = []Match{
 		{Type: MATCH_LITERAL, Field: FIELD_FROM, Value: "u@gmail.com"},
+	}
+	v, err = HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, false)
+}
+
+func TestMatchFieldFromNoHeader(t *testing.T) {
+	email := makeEmailWithEnvelope(`Subject: test
+Date: Sun, 8 Jan 2017 20:37:44 +0200
+
+Hello world!
+	`, "a@gmail.com", "sven@b.ee")
+
+	matches := []Match{
+		{Type: MATCH_LITERAL, Field: FIELD_TO, Value: "a@gmail.com"},
+	}
+	v, err := HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, true)
+
+	matches = []Match{
+		{Type: MATCH_LITERAL, Field: FIELD_TO, Value: "u@gmail.com"},
 	}
 	v, err = HasMatch(matches, email)
 	assert.Nil(t, err)
