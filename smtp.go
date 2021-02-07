@@ -312,18 +312,18 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 	for loop {
 		select {
 		case drop := <-chans.drop:
-			log.Debugf("drop (by rule %t)", drop.DroppedRule)
+			log.Infof("drop (by rule %t)", drop.DroppedRule)
 			loop = false
 			deleteBuffer(s)
 		case send := <-chans.send:
-			log.Debugf("send to %s", send.To)
+			log.Infof("send to %s", send.To)
 			if err := sendMail(send.Email, send.To); err != nil {
 				log.Errorf("error sending email: %s", err)
 				return processingError
 			}
 			loop = false
 		case <-chans.accept:
-			log.Debugf("accept\n")
+			log.Infof("accept\n")
 			loop = false
 			deleteBuffer(s)
 		case err := <-chans.error:
