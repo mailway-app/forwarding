@@ -128,6 +128,14 @@ func (s *session) readBuffer() ([]byte, error) {
 	return data, nil
 }
 
+func deleteBuffer(s *session) {
+	name := "/tmp/" + s.id.String() + ".eml"
+	log.Debugf("delete file buffer %s", name)
+	if err := os.Remove(name); err != nil {
+		log.Errorf("deleteBuffer: could not delete temporary file: %s", err)
+	}
+}
+
 func rcptHandler(session *session, from string, to string) bool {
 	e, err := parseAddress(to)
 	if err != nil {
@@ -306,6 +314,7 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 		case drop := <-chans.drop:
 			log.Debugf("drop (by rule %t)", drop.DroppedRule)
 			loop = false
+			deleteBuffer(s)
 		case send := <-chans.send:
 			log.Debugf("send to %s", send.To)
 			if err := sendMail(send.Email, send.To); err != nil {
@@ -316,6 +325,7 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 		case <-chans.accept:
 			log.Debugf("accept\n")
 			loop = false
+			deleteBuffer(s)
 		case err := <-chans.error:
 			log.Errorf("error during rule processing: %s", err)
 			return processingError
