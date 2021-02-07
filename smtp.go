@@ -188,7 +188,7 @@ func Run(addr string, config *config.Config) error {
 		HandlerRcpt: rcptHandler,
 		Appname:     "fwdr",
 		Hostname:    config.InstanceHostname,
-		Timeout:     60 * time.Second,
+		Timeout:     5 * time.Minute,
 		LogRead:     logger,
 		LogWrite:    logger,
 	}
