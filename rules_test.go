@@ -546,3 +546,20 @@ Hello world!
 	}()
 	assert.Equal(t, <-chans.accept, true, "Mail was not accepted")
 }
+
+func TestMatchFieldMultipleTo(t *testing.T) {
+	email := makeEmail(`From: sven@b.ee
+To: Tom <mail@jack.uk>, Ana <mail@ana.uk>
+Subject: test
+Date: Sun, 8 Jan 2017 20:37:44 +0200
+
+Hello world!
+	`)
+
+	matches := []Match{
+		{Type: MATCH_LITERAL, Field: FIELD_TO, Value: "mail@jack.uk"},
+	}
+	v, err := HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, true)
+}

@@ -86,7 +86,7 @@ func (chans *ActionChans) Error(e error) {
 	chans.Close()
 }
 
-func getField(field MatchField, email Email) (string, error) {
+func getField(field MatchField, email Email) ([]string, error) {
 	switch field {
 	case FIELD_TO:
 		to := email.Data.Header.Get("To")
@@ -94,25 +94,33 @@ func getField(field MatchField, email Email) (string, error) {
 			// FIXME: support multiple to?
 			to = email.Envelope.To[0]
 		}
-		e, err := mail.ParseAddress(to)
+		e, err := mail.ParseAddressList(to)
 		if err != nil {
-			return "", errors.Wrapf(err, "failed to parse %s", to)
+			return []string{}, errors.Wrapf(err, "failed to parse %s", to)
 		}
 
-		return e.Address, nil
+		out := make([]string, len(e))
+		for i, addr := range e {
+			out[i] = addr.Address
+		}
+		return out, nil
 	case FIELD_FROM:
 		from := email.Data.Header.Get("From")
 		if from == "" {
 			from = email.Envelope.From
 		}
-		e, err := mail.ParseAddress(from)
+		e, err := mail.ParseAddressList(from)
 		if err != nil {
-			return "", errors.Wrapf(err, "failed to parse %s", from)
+			return []string{}, errors.Wrapf(err, "failed to parse %s", from)
 		}
 
-		return e.Address, nil
+		out := make([]string, len(e))
+		for i, addr := range e {
+			out[i] = addr.Address
+		}
+		return out, nil
 	}
-	return "", errors.Errorf("field %s not supported\n", field)
+	return []string{}, errors.Errorf("field %s not supported\n", field)
 }
 
 func HasMatch(predicates []Match, email Email) (bool, error) {
@@ -134,27 +142,34 @@ func HasMatch(predicates []Match, email Email) (bool, error) {
 				log.Debugf("%d < %d", end, now)
 			}
 		case MATCH_REGEX:
-			v, err := getField(predicate.Field, email)
+			vs, err := getField(predicate.Field, email)
 			if err != nil {
 				return false, errors.Wrap(err, "failed to match regex")
 			}
-			if !match.Match(v, predicate.Value) {
-				log.Debugf("%s != %s", v, predicate.Value)
-				return false, nil
-			} else {
-				log.Debugf("%s ~= %s", v, predicate.Value)
+			for _, v := range vs {
+				if !match.Match(v, predicate.Value) {
+					log.Debugf("%s != %s", v, predicate.Value)
+					return false, nil
+				} else {
+					log.Debugf("%s ~= %s", v, predicate.Value)
+					// once matched, exit the loop now
+					break
+				}
 			}
-
 		case MATCH_LITERAL:
-			v, err := getField(predicate.Field, email)
+			vs, err := getField(predicate.Field, email)
 			if err != nil {
 				return false, errors.Wrap(err, "failed to match literal")
 			}
-			if v != predicate.Value {
-				log.Debugf("%s != %s", v, predicate.Value)
-				return false, nil
-			} else {
-				log.Debugf("%s == %s", v, predicate.Value)
+			for _, v := range vs {
+				if v != predicate.Value {
+					log.Debugf("%s != %s", v, predicate.Value)
+					return false, nil
+				} else {
+					log.Debugf("%s == %s", v, predicate.Value)
+					// once matched, exit the loop now
+					break
+				}
 			}
 
 		default:
