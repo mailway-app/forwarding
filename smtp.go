@@ -30,8 +30,13 @@ const (
 	MAIL_STATUS_SPAM = 3
 )
 
+var (
+	LOOP_DETECTION_COUNT = 25
+	RATE_LIMIT_COUNT     = 100
+)
+
 func hasLoop(email *Email) bool {
-	return len(email.Data.Header["Received"]) > 10
+	return len(email.Data.Header["Received"]) > LOOP_DETECTION_COUNT
 }
 
 func runSpamassassin(file string) error {
@@ -209,8 +214,8 @@ type Email struct {
 }
 
 func mailHandler(s *session, from string, to []string, data []byte) error {
-	if rateLimiter.GetCount(s.domain.Name) > 60 {
-		log.Infof("domain %s rate limited", s.domain.Name)
+	if rateLimiter.GetCount(s.domain.Name) > uint(RATE_LIMIT_COUNT) {
+		log.Errorf("domain %s rate limited", s.domain.Name)
 		return rateError
 	}
 
@@ -279,7 +284,7 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 	}
 
 	if hasLoop(&email) {
-		log.Warn("loop detected")
+		log.Error("loop detected")
 		return loopError
 	}
 
@@ -346,6 +351,12 @@ func main() {
 
 	if c.ServerJWT == "" {
 		panic("server JWT is needed")
+	}
+	if v := c.ForwardingLoopDetectionCount; v > 0 {
+		LOOP_DETECTION_COUNT = v
+	}
+	if v := c.ForwardingRateLimitingCount; v > 0 {
+		RATE_LIMIT_COUNT = v
 	}
 
 	apiClient = retryablehttp.NewClient()
