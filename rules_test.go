@@ -563,3 +563,29 @@ Hello world!
 	assert.Nil(t, err)
 	assert.Equal(t, v, true)
 }
+
+func TestNoMatchedRule(t *testing.T) {
+	email := makeEmail(`From: sven@b.ee
+To: abc@test.com
+Subject: test
+Date: Sun, 8 Jan 2017 20:37:44 +0200
+
+Hello world!
+	`)
+
+	rules := []Rule{
+		{
+			Match: []Match{
+				{Type: MATCH_LITERAL, Field: FIELD_TO, Value: "abc"},
+			},
+			Action: []Action{},
+		},
+	}
+	chans := MakeActionChans()
+
+	go func() {
+		rule, err := ApplyRules(rules, email, chans)
+		assert.Nil(t, err)
+		assert.Nil(t, rule)
+	}()
+}

@@ -297,8 +297,10 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 
 	go func(domainRules DomainRules, email Email, chans ActionChans, s *session) {
 		log.Debugf("running %d rule(s)", len(domainRules.Rules))
-		ruleId, err := ApplyRules(domainRules.Rules, email, chans)
-		if err == nil {
+		ruleId, _ := ApplyRules(domainRules.Rules, email, chans)
+		// No need to report the error because we also send it in the chans.error
+		// channel
+		if ruleId != nil {
 			if err := mailDBUpdateMailStatus(s, MAIL_STATUS_PROCESSED); err != nil {
 				log.Errorf("mailDBUpdateMailStatus: %s", err)
 			}
