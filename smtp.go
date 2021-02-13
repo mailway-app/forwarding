@@ -104,10 +104,8 @@ func (s *session) makeMailHeader(rcptTo []string, mailFrom string) string {
 		"Mw-Int-Mail-From: " + mailFrom,
 		// FIXME: for now only keep the first to
 		"Mw-Int-Rcpt-To: " + rcptTo[0],
-
-		"X-Mailway-Id: " + s.id.String(),
-		"X-Mailway-Domain: " + s.domain.Name,
-		"Autoforwarded: true",
+		"Mw-Int-Id: " + s.id.String(),
+		"Mw-Int-Domain: " + s.domain.Name,
 	}
 	return strings.Join(headers, "\r\n")
 }
