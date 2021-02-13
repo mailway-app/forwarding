@@ -21,6 +21,14 @@ github.com/mailway-app/config v0.0.0-20210131161027-17737b0f1d0c h1:Cg2CwynkGHBP
 github.com/mailway-app/config v0.0.0-20210131161027-17737b0f1d0c/go.mod h1:gjmRcvcb1UaRgtEMyfASF1XDXB2t0AFNKK+fJ8xM3NQ=
 github.com/mailway-app/config v0.0.0-20210210124901-97b8854bc2f8 h1:eYTaM/vRpdpRiZ45OXSJzAtbOdpzgqQCIiRswqvxRmQ=
 github.com/mailway-app/config v0.0.0-20210210124901-97b8854bc2f8/go.mod h1:gjmRcvcb1UaRgtEMyfASF1XDXB2t0AFNKK+fJ8xM3NQ=
+github.com/mailway-app/config v0.0.0-20210213002821-a5992221b618 h1:cgnV6EwmlU2l93LfIAjZXpXGMFfAW4WQ9atvQg01O7A=
+github.com/mailway-app/config v0.0.0-20210213002821-a5992221b618/go.mod h1:gjmRcvcb1UaRgtEMyfASF1XDXB2t0AFNKK+fJ8xM3NQ=
+github.com/mailway-app/config v0.0.0-20210213002949-a2634c908c78 h1:/ZiPk8qhRrArSf/fo2WnYUUWg7w4RzezxCO03TkgvGc=
+github.com/mailway-app/config v0.0.0-20210213002949-a2634c908c78/go.mod h1:gjmRcvcb1UaRgtEMyfASF1XDXB2t0AFNKK+fJ8xM3NQ=
+github.com/mailway-app/config v0.0.0-20210213003259-bcec46d5a56a h1:6/ZVg+tr7OUt2aMExqSfxcIaTlIon0l4U/rRfcmUrKs=
+github.com/mailway-app/config v0.0.0-20210213003259-bcec46d5a56a/go.mod h1:gjmRcvcb1UaRgtEMyfASF1XDXB2t0AFNKK+fJ8xM3NQ=
+github.com/mailway-app/config v0.0.0-20210213003639-e697b1dd86fb h1:7v/VrATGd2TJiynVv6DaQXrh1RV7NbU24SLRb72mzts=
+github.com/mailway-app/config v0.0.0-20210213003639-e697b1dd86fb/go.mod h1:gjmRcvcb1UaRgtEMyfASF1XDXB2t0AFNKK+fJ8xM3NQ=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

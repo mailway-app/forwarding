@@ -347,12 +347,13 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 func main() {
 	c, err := config.Read()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	log.SetLevel(c.GetLogLevel())
+	log.SetFormatter(c.GetLogFormat())
 
 	if c.ServerJWT == "" {
-		panic("server JWT is needed")
+		log.Fatal("server JWT is needed")
 	}
 	if v := c.ForwardingLoopDetectionCount; v > 0 {
 		LOOP_DETECTION_COUNT = v
@@ -375,7 +376,7 @@ func main() {
 
 	addr := fmt.Sprintf("127.0.0.1:%d", c.PortForwarding)
 	if err := Run(addr, c); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 
