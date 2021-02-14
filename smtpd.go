@@ -593,7 +593,7 @@ func (s *session) writef(format string, args ...interface{}) error {
 		if s.srv.LogWrite != nil {
 			s.srv.LogWrite(s.remoteIP, verb, line)
 		} else {
-			log.Println(s.remoteIP, verb, line)
+			log.Debug(s.remoteIP, verb, line)
 		}
 	}
 

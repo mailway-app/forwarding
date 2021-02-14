@@ -183,21 +183,21 @@ func logger(remoteIP, verb, line string) {
 	log.Infof("%s %s %s", remoteIP, verb, line)
 }
 
-func Run(addr string, config *config.Config) error {
+func Run(addr string) error {
 	Debug = true
 	srv := &Server{
 		Addr:        addr,
 		Handler:     mailHandler,
 		HandlerRcpt: rcptHandler,
 		Appname:     "fwdr",
-		Hostname:    config.InstanceHostname,
+		Hostname:    config.CurrConfig.InstanceHostname,
 		Timeout:     5 * time.Minute,
 		LogRead:     logger,
 		LogWrite:    logger,
 	}
 
-	log.Infof("Forwarding listening on %s for %s", addr, config.InstanceHostname)
-	return srv.ListenAndServe(config)
+	log.Infof("Forwarding listening on %s for %s", addr, config.CurrConfig.InstanceHostname)
+	return srv.ListenAndServe(config.CurrConfig)
 }
 
 type EmailEnvelope struct {
@@ -343,20 +343,17 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 }
 
 func main() {
-	c, err := config.Read()
-	if err != nil {
-		log.Fatal(err)
+	if err := config.Init(); err != nil {
+		log.Fatalf("failed to init config: %s", err)
 	}
-	log.SetLevel(c.GetLogLevel())
-	log.SetFormatter(c.GetLogFormat())
 
-	if c.ServerJWT == "" {
+	if config.CurrConfig.ServerJWT == "" {
 		log.Fatal("server JWT is needed")
 	}
-	if v := c.ForwardingLoopDetectionCount; v > 0 {
+	if v := config.CurrConfig.ForwardingLoopDetectionCount; v > 0 {
 		LOOP_DETECTION_COUNT = v
 	}
-	if v := c.ForwardingRateLimitingCount; v > 0 {
+	if v := config.CurrConfig.ForwardingRateLimitingCount; v > 0 {
 		RATE_LIMIT_COUNT = v
 	}
 
@@ -372,8 +369,8 @@ func main() {
 		Timeout: 30 * time.Second,
 	}
 
-	addr := fmt.Sprintf("127.0.0.1:%d", c.PortForwarding)
-	if err := Run(addr, c); err != nil {
+	addr := fmt.Sprintf("127.0.0.1:%d", config.CurrConfig.PortForwarding)
+	if err := Run(addr); err != nil {
 		log.Fatal(err)
 	}
 }
