@@ -51,6 +51,8 @@ github.com/mailway-app/config v0.0.0-20210214141724-fc9e8edc5684 h1:Lr87wY/+Rls3
 github.com/mailway-app/config v0.0.0-20210214141724-fc9e8edc5684/go.mod h1:wIptp9O+DqeKdh/SfCHLj1eg/nkDNugSGgn0JNY1ag8=
 github.com/mailway-app/config v0.0.0-20210214145136-8a381a1ce901 h1:cP6LytSdHAszaO674+xQQUqUeZkgzNcpbpWjrYX4K9U=
 github.com/mailway-app/config v0.0.0-20210214145136-8a381a1ce901/go.mod h1:wIptp9O+DqeKdh/SfCHLj1eg/nkDNugSGgn0JNY1ag8=
+github.com/mailway-app/config v0.0.0-20210214183823-a092c8c3a426 h1:fDFA6ib0DesgWZRPV7AGOOCyvyVngiX8q522VKuGFOg=
+github.com/mailway-app/config v0.0.0-20210214183823-a092c8c3a426/go.mod h1:wIptp9O+DqeKdh/SfCHLj1eg/nkDNugSGgn0JNY1ag8=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
