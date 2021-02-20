@@ -86,39 +86,54 @@ func (chans *ActionChans) Error(e error) {
 	chans.Close()
 }
 
+func parseAddresses(v string) ([]string, error) {
+	e, err := mail.ParseAddressList(v)
+	if err != nil {
+		return []string{}, errors.Wrapf(err, "failed to parse %s", v)
+	}
+
+	out := make([]string, len(e))
+	for i, addr := range e {
+		out[i] = addr.Address
+	}
+	return out, nil
+}
+
 func getField(field MatchField, email Email) ([]string, error) {
 	switch field {
 	case FIELD_TO:
-		to := email.Data.Header.Get("To")
-		if to == "" {
-			// FIXME: support multiple to?
-			to = email.Envelope.To[0]
+		if to := email.Data.Header.Get("To"); to != "" {
+			e, err := parseAddresses(to)
+			if err != nil {
+				return []string{}, errors.Wrapf(err, "failed to header `to` %s", to)
+			} else {
+				return e, nil
+			}
 		}
-		e, err := mail.ParseAddressList(to)
+		// FIXME: support multiple to?
+		to := email.Envelope.To[0]
+		e, err := parseAddresses(to)
 		if err != nil {
-			return []string{}, errors.Wrapf(err, "failed to parse %s", to)
+			return []string{},
+				errors.Wrapf(err, "failed to envelope `to` %s", to)
 		}
+		return e, nil
 
-		out := make([]string, len(e))
-		for i, addr := range e {
-			out[i] = addr.Address
-		}
-		return out, nil
 	case FIELD_FROM:
-		from := email.Data.Header.Get("From")
-		if from == "" {
-			from = email.Envelope.From
+		if from := email.Data.Header.Get("From"); from != "" {
+			e, err := parseAddresses(from)
+			if err != nil {
+				log.Warnf("failed to header `from` %s", from)
+			} else {
+				return e, nil
+			}
 		}
-		e, err := mail.ParseAddressList(from)
+		e, err := parseAddresses(email.Envelope.From)
 		if err != nil {
-			return []string{}, errors.Wrapf(err, "failed to parse %s", from)
+			return []string{},
+				errors.Wrapf(err, "failed to envelope `from` %s", email.Envelope.From)
 		}
-
-		out := make([]string, len(e))
-		for i, addr := range e {
-			out[i] = addr.Address
-		}
-		return out, nil
+		return e, nil
 	}
 	return []string{}, errors.Errorf("field %s not supported\n", field)
 }

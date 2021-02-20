@@ -589,3 +589,20 @@ Hello world!
 		assert.Nil(t, rule)
 	}()
 }
+
+func TestMatchFromWithBrokenHeader(t *testing.T) {
+	email := makeEmailWithEnvelope(`From: a
+To: Ana <mail@ana.uk>
+Subject: test
+Date: Sun, 8 Jan 2017 20:37:44 +0200
+
+Hello world!
+	`, "to@mailway.app", "from@mailway.app")
+
+	matches := []Match{
+		{Type: MATCH_LITERAL, Field: FIELD_FROM, Value: "from@mailway.app"},
+	}
+	v, err := HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, true)
+}
