@@ -18,20 +18,14 @@ const (
 	API_BASE_URL = "https://apiv1.mailway.app"
 )
 
-type Domain struct {
-	Name      string       `json:"name"`
-	MxRecords []string     `json:"mxRecords"`
-	Status    DomainStatus `json:"status"`
-	// FIXME: we can get rules from domain call
-}
-
 type APIResponse struct {
 	Ok    bool            `json:"ok"`
 	Data  json.RawMessage `json:"data"`
 	Error string          `json:"error"`
 }
 
-func getDomainConfig(instance *config.Config, domain string) (*Domain, error) {
+// FIXME: merge domain config and domain rule
+func getAPIDomainConfig(instance *config.Config, domain string) (*Domain, error) {
 	url := fmt.Sprintf("%s/instance/%s/domain/%s", API_BASE_URL, instance.ServerId, strings.ToLower(domain))
 	log.Debugf("request to %s", url)
 
@@ -83,7 +77,7 @@ func getDomainConfig(instance *config.Config, domain string) (*Domain, error) {
 	}
 }
 
-func getDomainRules(instance *config.Config, domain string) (DomainRules, error) {
+func getAPIDomainRules(instance *config.Config, domain string) (DomainRules, error) {
 	var domainRules DomainRules
 	url := fmt.Sprintf("%s/instance/%s/domain/%s/rules", API_BASE_URL, instance.ServerId, domain)
 	log.Debugf("request to %s", url)
