@@ -29,24 +29,24 @@ const (
 )
 
 type Match struct {
-	Type  MatchType  `json:"type"`
-	Field MatchField `json:"field"`
-	Value string     `json:"value"`
+	Type  MatchType  `json:"type" yaml:"type"`
+	Field MatchField `json:"field" yaml:"field"`
+	Value string     `json:"value" yaml:"value"`
 }
 type Action struct {
-	Type  ActionType `json:"type"`
-	Value []string   `json:"value"`
+	Type  ActionType `json:"type" yaml:"type"`
+	Value []string   `json:"value" yaml:"value"`
 }
 type RuleId string
 type Rule struct {
-	Id     RuleId   `json:"id"`
-	Type   int      `json:"type"`
-	Match  []Match  `json:"match"`
-	Action []Action `json:"action"`
+	Id     RuleId   `json:"id" yaml:"id"`
+	Type   int      `json:"type" yaml:"type"`
+	Match  []Match  `json:"match" yaml:"match"`
+	Action []Action `json:"action" yaml:"action"`
 }
 
 type DomainRules struct {
-	Rules []Rule `json:"rules"`
+	Rules []Rule `json:"rules" yaml:"rules"`
 }
 
 type ActionDrop struct {

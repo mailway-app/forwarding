@@ -21,6 +21,18 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type DomainStatus int
+
+const (
+	DOMAIN_UNCOMPLETE DomainStatus = 0
+	DOMAIN_ACTIVE     DomainStatus = 1
+)
+
+type Domain struct {
+	Name   string       `json:"name"`
+	Status DomainStatus `json:"status"`
+}
+
 const (
 	LOCAL_SMTP = "localhost:2525"
 
@@ -70,13 +82,6 @@ var (
 var (
 	apiClient    *retryablehttp.Client
 	mailDBClient *retryablehttp.Client
-)
-
-type DomainStatus int
-
-const (
-	// DOMAIN_UNCOMPLETE DomainStatus = 0
-	DOMAIN_ACTIVE DomainStatus = 1
 )
 
 type Address struct {
@@ -139,6 +144,22 @@ func deleteBuffer(s *session) {
 	}
 }
 
+func getDomainRules(instance *config.Config, domain string) (DomainRules, error) {
+	if config.CurrConfig.IsInstanceLocal() {
+		return getLocalDomainRules(instance, domain)
+	} else {
+		return getAPIDomainRules(instance, domain)
+	}
+}
+
+func getDomainConfig(instance *config.Config, domain string) (*Domain, error) {
+	if config.CurrConfig.IsInstanceLocal() {
+		return getLocalDomainConfig(instance, domain)
+	} else {
+		return getAPIDomainConfig(instance, domain)
+	}
+}
+
 func rcptHandler(session *session, from string, to string) bool {
 	e, err := parseAddress(to)
 	if err != nil {
@@ -196,7 +217,7 @@ func Run(addr string) error {
 		LogWrite:    logger,
 	}
 
-	log.Infof("Forwarding listening on %s for %s", addr, config.CurrConfig.InstanceHostname)
+	log.Infof("Forwarding listening on %s for %s (in mode %s)", addr, config.CurrConfig.InstanceHostname, config.CurrConfig.InstanceMode)
 	return srv.ListenAndServe(config.CurrConfig)
 }
 
@@ -347,7 +368,7 @@ func main() {
 		log.Fatalf("failed to init config: %s", err)
 	}
 
-	if config.CurrConfig.ServerJWT == "" {
+	if !config.CurrConfig.IsInstanceLocal() && config.CurrConfig.ServerJWT == "" {
 		log.Fatal("server JWT is needed")
 	}
 	if v := config.CurrConfig.ForwardingLoopDetectionCount; v > 0 {
