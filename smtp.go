@@ -26,6 +26,8 @@ type DomainStatus int
 const (
 	DOMAIN_UNCOMPLETE DomainStatus = 0
 	DOMAIN_ACTIVE     DomainStatus = 1
+
+	CRLF = "\r\n"
 )
 
 type Domain struct {
@@ -34,8 +36,6 @@ type Domain struct {
 }
 
 const (
-	LOCAL_SMTP = "localhost:2525"
-
 	// MAIL_STATUS_RECEIVED  = 0
 	MAIL_STATUS_PROCESSED = 1
 	// MAIL_STATUS_DELIVERED = 2
@@ -112,7 +112,7 @@ func (s *session) makeMailHeader(rcptTo []string, mailFrom string) string {
 		"Mw-Int-Id: " + s.id.String(),
 		"Mw-Int-Domain: " + s.domain.Name,
 	}
-	return strings.Join(headers, "\r\n")
+	return strings.Join(headers, CRLF)
 }
 
 func (s *session) newBuffer() (*os.File, error) {
@@ -343,15 +343,18 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 			deleteBuffer(s)
 		case send := <-chans.send:
 			log.Infof("send to %s", send.To)
-			if err := sendMail(send.Email, send.To); err != nil {
-				log.Errorf("error sending email: %s", err)
+			if err := sendMailout(send.Email, send.To); err != nil {
+				log.Errorf("error sending email out: %s", err)
 				return processingError
 			}
 			loop = false
-		case <-chans.accept:
-			log.Infof("accept\n")
+		case webhook := <-chans.webhook:
+			log.Infof("call %s\n", webhook.Endpoint)
+			if err := sendWebhook(webhook.Email, webhook.Endpoint, webhook.SecretToken); err != nil {
+				log.Errorf("error sending webhook: %s", err)
+				return processingError
+			}
 			loop = false
-			deleteBuffer(s)
 		case err := <-chans.error:
 			log.Errorf("error during rule processing: %s", err)
 			return processingError
@@ -396,10 +399,28 @@ func main() {
 	}
 }
 
-func sendMail(email Email, to string) error {
+func sendMailout(email Email, to string) error {
 	from := email.Envelope.From
-	if err := smtp.SendMail(LOCAL_SMTP, nil, from, []string{to}, email.Bytes); err != nil {
-		return errors.Wrap(err, "could not send email")
+	addr := fmt.Sprintf("127.0.0.1:%d", config.CurrConfig.PortMailout)
+	if err := smtp.SendMail(addr, nil, from, []string{to}, email.Bytes); err != nil {
+		return errors.Wrap(err, "could not send email to mailout")
+	}
+	return nil
+}
+
+func sendWebhook(email Email, endpoint string, secretToken string) error {
+	from := email.Envelope.From
+	to := email.Envelope.To
+
+	buffer := new(bytes.Buffer)
+
+	buffer.WriteString(fmt.Sprintf("Mw-Int-Webhook-URL: %s%s", endpoint, CRLF))
+	buffer.WriteString(fmt.Sprintf("Mw-Int-Webhook-Secret-Token: %s%s", secretToken, CRLF))
+	buffer.Write(email.Bytes)
+
+	addr := fmt.Sprintf("127.0.0.1:%d", config.CurrConfig.PortWebhook)
+	if err := smtp.SendMail(addr, nil, from, to, buffer.Bytes()); err != nil {
+		return errors.Wrap(err, "could not send email to webhook")
 	}
 	return nil
 }

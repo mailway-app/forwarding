@@ -518,7 +518,6 @@ Hello world!
 	assert.Equal(t, <-chans.drop, ActionDrop{DroppedRule: true}, "Mail was not dropped")
 }
 
-// FIXME: implement all the webhook logic, server can return actions
 func TestRunWebhookAction(t *testing.T) {
 	email := makeEmail(`From: sven@b.ee
 To: abc@test.com
@@ -534,7 +533,7 @@ Hello world!
 				{Type: MATCH_ALL},
 			},
 			Action: []Action{
-				{Type: ACTION_WEBHOOK, Value: []string{"https://a"}},
+				{Type: ACTION_WEBHOOK, Value: []string{"https://a", "secret_token"}},
 			},
 		},
 	}
@@ -544,7 +543,8 @@ Hello world!
 		_, err := ApplyRules(rules, email, chans)
 		assert.Equal(t, err, nil, "ApplyRules return an error")
 	}()
-	assert.Equal(t, <-chans.accept, true, "Mail was not accepted")
+	assert.Equal(t, <-chans.webhook,
+		ActionWebhook{Email: email, Endpoint: "https://a", SecretToken: "secret_token"}, "webhook was not called")
 }
 
 func TestMatchFieldMultipleTo(t *testing.T) {
