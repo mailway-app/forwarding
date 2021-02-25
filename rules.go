@@ -33,6 +33,8 @@ type Match struct {
 	Field MatchField `json:"field" yaml:"field"`
 	Value string     `json:"value" yaml:"value"`
 }
+
+// For Webhook the Action value is: [endpoint, secret token]
 type Action struct {
 	Type  ActionType `json:"type" yaml:"type"`
 	Value []string   `json:"value" yaml:"value"`
@@ -58,26 +60,33 @@ type ActionSend struct {
 	To    string
 }
 
+type ActionWebhook struct {
+	Email       Email
+	Endpoint    string
+	SecretToken string
+}
+
 type ActionChans struct {
-	send   chan ActionSend
-	drop   chan ActionDrop
-	accept chan bool
-	error  chan error
+	send    chan ActionSend
+	drop    chan ActionDrop
+	webhook chan ActionWebhook
+
+	error chan error
 }
 
 func MakeActionChans() ActionChans {
 	return ActionChans{
-		send:   make(chan ActionSend),
-		drop:   make(chan ActionDrop),
-		accept: make(chan bool),
-		error:  make(chan error),
+		send:    make(chan ActionSend),
+		drop:    make(chan ActionDrop),
+		webhook: make(chan ActionWebhook),
+		error:   make(chan error),
 	}
 }
 
 func (chans *ActionChans) Close() {
 	close(chans.send)
 	close(chans.drop)
-	close(chans.accept)
+	close(chans.webhook)
 	close(chans.error)
 }
 
@@ -208,8 +217,15 @@ func ApplyRules(rules []Rule, email Email, chans ActionChans) (*RuleId, error) {
 				case ACTION_DROP:
 					chans.drop <- ActionDrop{DroppedRule: true}
 				case ACTION_WEBHOOK:
-					// FIXME: implement webhooks
-					chans.accept <- true
+					if len(action.Value) != 2 {
+						return nil, errors.Errorf(
+							"invalid webhook configuration, expected 2 params got %d", len(action.Value))
+					}
+					chans.webhook <- ActionWebhook{
+						Email:       email,
+						Endpoint:    action.Value[0],
+						SecretToken: action.Value[1],
+					}
 				case ACTION_FORWARD:
 					for _, to := range action.Value {
 						chans.send <- ActionSend{Email: email, To: to}
