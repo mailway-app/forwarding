@@ -113,8 +113,8 @@ func getField(field MatchField, email Email) ([]string, error) {
 	case FIELD_TO:
 		if to := email.Data.Header.Get("To"); to != "" {
 			e, err := parseAddresses(to)
-			if err != nil {
-				return []string{}, errors.Wrapf(err, "failed to header `to` %s", to)
+			if err != nil || len(e) == 0 {
+				log.Warnf("failed to parse header `to` %s", to)
 			} else {
 				return e, nil
 			}
@@ -131,8 +131,8 @@ func getField(field MatchField, email Email) ([]string, error) {
 	case FIELD_FROM:
 		if from := email.Data.Header.Get("From"); from != "" {
 			e, err := parseAddresses(from)
-			if err != nil {
-				log.Warnf("failed to header `from` %s", from)
+			if err != nil || len(e) == 0 {
+				log.Warnf("failed to parse header `from` %s", from)
 			} else {
 				return e, nil
 			}
@@ -154,7 +154,6 @@ func HasMatch(predicates []Match, email Email) (bool, error) {
 			// ok
 		case MATCH_TIME_AFTER:
 			now := time.Now().UnixNano() / 1e6
-			log.Println(predicate)
 			end, err := strconv.ParseInt(predicate.Value, 10, 64)
 			if err != nil {
 				return false, errors.Wrap(err, "could not parse int")

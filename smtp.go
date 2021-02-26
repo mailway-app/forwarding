@@ -192,7 +192,7 @@ func rcptHandler(session *session, from string, to string) bool {
 		log.Errorf("mailDBSet to: %s", err)
 		return false
 	}
-	if err := mailDBSet(session, "from", to); err != nil {
+	if err := mailDBSet(session, "from", from); err != nil {
 		log.Errorf("mailDBSet from: %s", err)
 		return false
 	}
