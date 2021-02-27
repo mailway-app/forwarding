@@ -215,6 +215,7 @@ func Run(addr string) error {
 		Timeout:     5 * time.Minute,
 		LogRead:     logger,
 		LogWrite:    logger,
+		MaxSize:     10485760,
 	}
 
 	log.Infof("Forwarding listening on %s for %s (in mode %s)", addr, config.CurrConfig.InstanceHostname, config.CurrConfig.InstanceMode)
