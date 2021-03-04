@@ -152,6 +152,7 @@ func getField(field MatchField, email Email) ([]string, error) {
 			e := []string{subject}
 			return e, nil
 		}
+        return nil, nil
 	}
 	return []string{}, errors.Errorf("field %s not supported\n", field)
 }

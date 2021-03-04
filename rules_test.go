@@ -648,6 +648,10 @@ Hello world!
 		_, err := HasMatch(matches, email)
 		assert.Equal(t, err, nil, "field subject not supported")
 	}()
+
+    v, err := HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, true)
 }
 
 func TestMatchRegexSubject(t *testing.T) {
