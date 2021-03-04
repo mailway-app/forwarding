@@ -606,3 +606,71 @@ Hello world!
 	assert.Nil(t, err)
 	assert.Equal(t, v, true)
 }
+
+func TestMatchFieldSubject(t *testing.T) {
+	email := makeEmail(`From: sven@b.ee
+To: a@gmail.com
+Subject: test
+Date: Sun, 8 Jan 2017 20:37:44 +0200
+
+Hello world!
+	`)
+
+	matches := []Match{
+		{Type: MATCH_LITERAL, Field: FIELD_SUBJECT, Value: "test"},
+	}
+	v, err := HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, true)
+
+	matches = []Match{
+		{Type: MATCH_LITERAL, Field: FIELD_SUBJECT, Value: "not"},
+	}
+	v, err = HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, false)
+}
+
+func TestMatchFieldWithEmptySubject(t *testing.T) {
+	email := makeEmail(`From: sven@b.ee
+To: a@gmail.com
+Subject:
+Date: Sun, 8 Jan 2017 20:37:44 +0200
+
+Hello world!
+	`)
+
+	matches := []Match{
+		{Type: MATCH_LITERAL, Field: FIELD_SUBJECT, Value: "test"},
+	}
+
+	go func() {
+		_, err := HasMatch(matches, email)
+		assert.Equal(t, err, nil, "field subject not supported")
+	}()
+}
+
+func TestMatchRegexSubject(t *testing.T) {
+	email := makeEmail(`To: sven@b.ee
+From: abc@abc.com
+Subject: test
+Date: Sun, 8 Jan 2017 20:37:44 +0200
+
+Hello world!
+	`)
+
+	matches := []Match{
+		{Type: MATCH_REGEX, Field: FIELD_SUBJECT, Value: "*st"},
+	}
+	v, err := HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, true)
+
+	matches = []Match{
+		{Type: MATCH_REGEX, Field: FIELD_SUBJECT, Value: "no*"},
+	}
+	v, err = HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, false)
+}
+
