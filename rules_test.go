@@ -649,7 +649,7 @@ Hello world!
 		assert.Equal(t, err, nil, "field subject not supported")
 	}()
 
-    v, err := HasMatch(matches, email)
+	v, err := HasMatch(matches, email)
 	assert.Nil(t, err)
 	assert.Equal(t, v, true)
 }
@@ -677,4 +677,3 @@ Hello world!
 	assert.Nil(t, err)
 	assert.Equal(t, v, false)
 }
-

@@ -20,8 +20,8 @@ const (
 	MATCH_REGEX      MatchType = "regex"
 	MATCH_TIME_AFTER MatchType = "timeAfter"
 
-	FIELD_TO   MatchField = "to"
-	FIELD_FROM MatchField = "from"
+	FIELD_TO      MatchField = "to"
+	FIELD_FROM    MatchField = "from"
 	FIELD_SUBJECT MatchField = "subject"
 
 	ACTION_DROP    ActionType = "drop"
@@ -147,12 +147,10 @@ func getField(field MatchField, email Email) ([]string, error) {
 		return e, nil
 
 	case FIELD_SUBJECT:
-        subject := email.Data.Header.Get("Subject")
-		if subject != "" {
-			e := []string{subject}
-			return e, nil
-		}
-        return nil, nil
+		subject := email.Data.Header.Get("Subject")
+		e := []string{subject}
+		return e, nil
+
 	}
 	return []string{}, errors.Errorf("field %s not supported\n", field)
 }
