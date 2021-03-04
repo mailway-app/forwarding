@@ -22,6 +22,7 @@ const (
 
 	FIELD_TO   MatchField = "to"
 	FIELD_FROM MatchField = "from"
+	FIELD_SUBJECT MatchField = "subject"
 
 	ACTION_DROP    ActionType = "drop"
 	ACTION_FORWARD ActionType = "forward"
@@ -109,6 +110,7 @@ func parseAddresses(v string) ([]string, error) {
 }
 
 func getField(field MatchField, email Email) ([]string, error) {
+
 	switch field {
 	case FIELD_TO:
 		if to := email.Data.Header.Get("To"); to != "" {
@@ -143,6 +145,13 @@ func getField(field MatchField, email Email) ([]string, error) {
 				errors.Wrapf(err, "failed to envelope `from` %s", email.Envelope.From)
 		}
 		return e, nil
+
+	case FIELD_SUBJECT:
+        subject := email.Data.Header.Get("Subject")
+		if subject != "" {
+			e := []string{subject}
+			return e, nil
+		}
 	}
 	return []string{}, errors.Errorf("field %s not supported\n", field)
 }
