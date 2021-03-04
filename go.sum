@@ -63,6 +63,12 @@ github.com/mailway-app/config v0.0.0-20210221200854-0dd6be3aa05c h1:AlQPjXjpSq2t
 github.com/mailway-app/config v0.0.0-20210221200854-0dd6be3aa05c/go.mod h1:wIptp9O+DqeKdh/SfCHLj1eg/nkDNugSGgn0JNY1ag8=
 github.com/mailway-app/config v0.0.0-20210224193706-8c6f9949472e h1:alOTjIV//am9Qn1KS1ysd0DD//rFRNkEF0lWjgYDR+w=
 github.com/mailway-app/config v0.0.0-20210224193706-8c6f9949472e/go.mod h1:wIptp9O+DqeKdh/SfCHLj1eg/nkDNugSGgn0JNY1ag8=
+github.com/mailway-app/golib v0.0.0-20210228113900-19f0fe62c463 h1:cKG9pC6LJQVJlwLDvW/TrEk22wDNpT61ev8QMNp6A/Y=
+github.com/mailway-app/golib v0.0.0-20210228113900-19f0fe62c463/go.mod h1:0o1XC8AC4/jk0fqGTeOPPCMogSY8i062A5ZlWd4D6uU=
+github.com/mailway-app/golib v0.0.0-20210228114024-d7bdf199e227 h1:i+TxiUpc7m4vzZwUG+sTqf93uPVtm/NW1NIGwBen5uM=
+github.com/mailway-app/golib v0.0.0-20210228114024-d7bdf199e227/go.mod h1:0o1XC8AC4/jk0fqGTeOPPCMogSY8i062A5ZlWd4D6uU=
+github.com/mailway-app/golib v0.0.0-20210228114125-ebf3924e7637 h1:0xDE2IxhsPGXS2WgU7vzWfcEVi7QMO1I+vzmagRbfv4=
+github.com/mailway-app/golib v0.0.0-20210228114125-ebf3924e7637/go.mod h1:jJk/lh3AaUhLU1xSb89WgxO4kO2L2vReM+nQqBQNBZ8=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

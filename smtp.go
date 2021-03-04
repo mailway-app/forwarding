@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/mailway-app/config"
+	"github.com/mailway-app/golib/rate"
 
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-retryablehttp"
@@ -76,7 +77,7 @@ var (
 	configError     = errors.New("451 4.3.5 Internal server errror")
 	rateError       = errors.New("450 4.4.2 Temporarily rate limited; suspicious behavior")
 
-	rateLimiter = newRaterLimiter()
+	rateLimiter = rate.NewRaterLimiter()
 )
 
 var (

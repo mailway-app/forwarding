@@ -7,6 +7,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.6.8
 	github.com/magefile/mage v1.11.0 // indirect
 	github.com/mailway-app/config v0.0.0-20210224193706-8c6f9949472e
+	github.com/mailway-app/golib v0.0.0-20210228114125-ebf3924e7637
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.0
 	github.com/stretchr/testify v1.2.2
