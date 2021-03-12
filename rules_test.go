@@ -641,7 +641,7 @@ Hello world!
 	`)
 
 	matches := []Match{
-		{Type: MATCH_LITERAL, Field: FIELD_SUBJECT, Value: "test"},
+		{Type: MATCH_LITERAL, Field: FIELD_SUBJECT, Value: ""},
 	}
 
 	go func() {
