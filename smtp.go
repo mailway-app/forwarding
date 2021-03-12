@@ -112,6 +112,7 @@ func (s *session) makeMailHeader(rcptTo []string, mailFrom string) string {
 		"Mw-Int-Rcpt-To: " + rcptTo[0],
 		"Mw-Int-Id: " + s.id.String(),
 		"Mw-Int-Domain: " + s.domain.Name,
+		"Mw-Int-Date: " + fmt.Sprintf("%d", time.Now().Unix()),
 	}
 	return strings.Join(headers, CRLF)
 }
