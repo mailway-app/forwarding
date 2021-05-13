@@ -118,7 +118,7 @@ func (s *session) makeMailHeader(rcptTo []string, mailFrom string) string {
 }
 
 func (s *session) newBuffer() (*os.File, error) {
-	name := "/tmp/" + s.id.String() + ".eml"
+	name := fmt.Sprintf("%s/%s.eml", config.RUNTIME_LOCATION, s.id.String())
 	log.Debugf("create file buffer %s", name)
 	f, err := os.OpenFile(name, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
@@ -130,7 +130,8 @@ func (s *session) newBuffer() (*os.File, error) {
 }
 
 func (s *session) readBuffer() ([]byte, error) {
-	data, err := ioutil.ReadFile("/tmp/" + s.id.String() + ".eml")
+	name := fmt.Sprintf("%s/%s.eml", config.RUNTIME_LOCATION, s.id.String())
+	data, err := ioutil.ReadFile(name)
 	if err != nil {
 		log.Errorf("readBuffer: could not read temporary file: %s", err)
 		return nil, unknownError
@@ -139,7 +140,7 @@ func (s *session) readBuffer() ([]byte, error) {
 }
 
 func deleteBuffer(s *session) {
-	name := "/tmp/" + s.id.String() + ".eml"
+	name := fmt.Sprintf("%s/%s.eml", config.RUNTIME_LOCATION, s.id.String())
 	log.Debugf("delete file buffer %s", name)
 	if err := os.Remove(name); err != nil {
 		log.Errorf("deleteBuffer: could not delete temporary file: %s", err)
@@ -220,6 +221,12 @@ func Run(addr string) error {
 		MaxSize:     10485760,
 	}
 
+	if _, err := os.Stat(config.RUNTIME_LOCATION); os.IsNotExist(err) {
+		if err := os.Mkdir(config.RUNTIME_LOCATION, 0700); err != nil {
+			return errors.Wrap(err, "could not create runtime location")
+		}
+	}
+
 	log.Infof("Forwarding listening on %s for %s (in mode %s)", addr, config.CurrConfig.InstanceHostname, config.CurrConfig.InstanceMode)
 	return srv.ListenAndServe(config.CurrConfig)
 }
@@ -245,7 +252,8 @@ func mailHandler(s *session, from string, to []string, data []byte) error {
 
 	if s.config.SpamFilter {
 		log.Infof("run Spamassassin")
-		file := "/tmp/" + s.id.String() + ".eml"
+
+		file := fmt.Sprintf("%s/%s.eml", config.RUNTIME_LOCATION, s.id.String())
 		if err := runSpamassassin(file); err != nil {
 			log.Errorf("could not run spam filter: %s", err)
 			return processingError

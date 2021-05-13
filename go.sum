@@ -63,6 +63,8 @@ github.com/mailway-app/config v0.0.0-20210221200854-0dd6be3aa05c h1:AlQPjXjpSq2t
 github.com/mailway-app/config v0.0.0-20210221200854-0dd6be3aa05c/go.mod h1:wIptp9O+DqeKdh/SfCHLj1eg/nkDNugSGgn0JNY1ag8=
 github.com/mailway-app/config v0.0.0-20210224193706-8c6f9949472e h1:alOTjIV//am9Qn1KS1ysd0DD//rFRNkEF0lWjgYDR+w=
 github.com/mailway-app/config v0.0.0-20210224193706-8c6f9949472e/go.mod h1:wIptp9O+DqeKdh/SfCHLj1eg/nkDNugSGgn0JNY1ag8=
+github.com/mailway-app/config v0.0.0-20210513211133-2f31c01469d5 h1:be1rFNpZmAztT0gJmmHIpLp1v7PAoMIum1LGUcIuSj8=
+github.com/mailway-app/config v0.0.0-20210513211133-2f31c01469d5/go.mod h1:wIptp9O+DqeKdh/SfCHLj1eg/nkDNugSGgn0JNY1ag8=
 github.com/mailway-app/golib v0.0.0-20210228113900-19f0fe62c463 h1:cKG9pC6LJQVJlwLDvW/TrEk22wDNpT61ev8QMNp6A/Y=
 github.com/mailway-app/golib v0.0.0-20210228113900-19f0fe62c463/go.mod h1:0o1XC8AC4/jk0fqGTeOPPCMogSY8i062A5ZlWd4D6uU=
 github.com/mailway-app/golib v0.0.0-20210228114024-d7bdf199e227 h1:i+TxiUpc7m4vzZwUG+sTqf93uPVtm/NW1NIGwBen5uM=
@@ -77,6 +79,8 @@ github.com/sirupsen/logrus v1.7.0 h1:ShrD1U9pZB12TX0cVy0DtePoCH97K8EtX+mg7ZARUtM
 github.com/sirupsen/logrus v1.7.0/go.mod h1:yWOB1SBYBC5VeMP7gHvWumXLIWorT60ONWic61uBYv0=
 github.com/sirupsen/logrus v1.8.0 h1:nfhvjKcUMhBMVqbKHJlk5RPrrfYr/NMo3692g0dwfWU=
 github.com/sirupsen/logrus v1.8.0/go.mod h1:4GuYW9TZmE769R5STWrRakJc4UqQ3+QQ95fyz7ENv1A=
+github.com/sirupsen/logrus v1.8.1 h1:dJKuHgqk1NNQlqoA6BTlM1Wf9DOH3NBjQyu0h9+AZZE=
+github.com/sirupsen/logrus v1.8.1/go.mod h1:yWOB1SBYBC5VeMP7gHvWumXLIWorT60ONWic61uBYv0=
 github.com/stretchr/testify v1.2.2 h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1w=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/tidwall/match v1.0.3 h1:FQUVvBImDutD8wJLN6c5eMzWtjgONK9MwIBCOrUJKeE=
@@ -90,6 +94,8 @@ golang.org/x/sys v0.0.0-20210220050731-9a76102bfb43 h1:SgQ6LNaYJU0JIuEHv9+s6EbhS
 golang.org/x/sys v0.0.0-20210220050731-9a76102bfb43/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20210223212115-eede4237b368 h1:fDE3p0qf2V1co1vfj3/o87Ps8Hq6QTGNxJ5Xe7xSp80=
 golang.org/x/sys v0.0.0-20210223212115-eede4237b368/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20210511113859-b0526f3d8744 h1:yhBbb4IRs2HS9PPlAg6DMC6mUOKexJBNsLf4Z+6En1Q=
+golang.org/x/sys v0.0.0-20210511113859-b0526f3d8744/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.4.0 h1:D8xgwECY7CYvx+Y2n4sBz93Jn9JRvxdiyyo8CTfuKaY=
 gopkg.in/yaml.v2 v2.4.0/go.mod h1:RDklbk79AGWmwhnvt/jBztapEOGDOx6ZbXqjP6csGnQ=
