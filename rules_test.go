@@ -199,6 +199,23 @@ Hello world!
 	assert.Equal(t, v, false)
 }
 
+func TestMatchFieldToUpercase(t *testing.T) {
+	email := makeEmail(`From: sven@b.ee
+To: A@GMAIl.com
+Subject: test
+Date: Sun, 8 Jan 2017 20:37:44 +0200
+
+Hello world!
+	`)
+
+	matches := []Match{
+		{Type: MATCH_LITERAL, Field: FIELD_TO, Value: "a@gmail.com"},
+	}
+	v, err := HasMatch(matches, email)
+	assert.Nil(t, err)
+	assert.Equal(t, v, true)
+}
+
 func TestMatchFieldToNoHeader(t *testing.T) {
 	email := makeEmailWithEnvelope(`From: sven@b.ee
 Subject: test

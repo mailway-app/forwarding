@@ -3,6 +3,7 @@ package main
 import (
 	"net/mail"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -109,8 +110,7 @@ func parseAddresses(v string) ([]string, error) {
 	return out, nil
 }
 
-func getField(field MatchField, email Email) ([]string, error) {
-
+func getFieldRaw(field MatchField, email Email) ([]string, error) {
 	switch field {
 	case FIELD_TO:
 		if to := email.Data.Header.Get("To"); to != "" {
@@ -153,6 +153,17 @@ func getField(field MatchField, email Email) ([]string, error) {
 
 	}
 	return []string{}, errors.Errorf("field %s not supported\n", field)
+}
+
+func getField(field MatchField, email Email) ([]string, error) {
+	values, err := getFieldRaw(field, email)
+	if err != nil {
+		return nil, err
+	}
+	for i, value := range values {
+		values[i] = strings.ToLower(value)
+	}
+	return values, nil
 }
 
 func HasMatch(predicates []Match, email Email) (bool, error) {
